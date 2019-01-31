@@ -20,18 +20,16 @@ import javax.imageio.stream.ImageInputStream;
 public class QafFile
 {
 	private File inputFile = null;
-	private ImageInputStream iis = null;
 	BufferedImage img = null; 
 	
 	public QafFile(String inputFileName) throws IOException
 	{
-
+	    
 		this.inputFile = new File(inputFileName);
 		if(this.inputFile.exists() == false)
 		{
 			throw new IOException("Qaf File does not exist");
 		}
-		this.iis = ImageIO.createImageInputStream(this.inputFile);
 		
 		// Check if we can understand the image
 		if(this.containsUseableImage() == false)
@@ -41,7 +39,6 @@ public class QafFile
 		
 		// Read the image
 		this.img = ImageIO.read(this.inputFile);
-		
 	}
 	
 		
@@ -112,7 +109,7 @@ public class QafFile
 	 */
 	public String getImageFormat()
 	{
-		try 
+		try(ImageInputStream iis = ImageIO.createImageInputStream(this.inputFile))
 		{
 			Iterator<ImageReader> imageReaders = ImageIO.getImageReaders(iis);
 			while (imageReaders.hasNext()) 
